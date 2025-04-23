@@ -1,40 +1,17 @@
-resource "incus_instance" "ubuntutf" {
-  name  = "ubuntu-tf"
-  image = "images:ubuntu/22.04"
-  type  = "container"
-
-  config = {
-    "boot.autostart" = true
-    "limits.cpu"     = 1
-    "limits.memory"  = "500MiB"
-  }
-
-  device {
-    name = "root"
-    type = "disk"
-    properties = {
-      pool = "default"
-      size = "8GB"
-      path = "/"
-    }
-  }
-
-  device {
-    name = "eth0"
-    type = "nic"
-    properties = {
-      network   = "incusbr0"  
-      name      = "eth0"      
-      "ipv4.address" = "10.229.23.100"    
-    }
-  }
-
-  wait_for {
-    type = "ipv4"
-  }
+module "container1" {
+  source = "./modules/container"
+  name = "ubuntu-tf-1"
+  ip_address = "10.229.23.101"
 }
 
-output "ip_address" {
-  value = incus_instance.ubuntutf.ipv4_address
+module "container2" {
+  source = "./modules/container"
+  name = "ubuntu-tf-2"
+  ip_address = "10.229.23.102"
+}
 
+module "container3" {
+  source = "./modules/container"
+  name = "ubuntu-tf-3"
+  ip_address = "10.229.23.103"
 }
